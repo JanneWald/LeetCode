@@ -1,19 +1,20 @@
-def trap(self, height: List[int]) -> int:
-    def getIncreasing(start, stop, step):
-        res = [0] * len(height)
-        tallest = 0
-        for i in range(start, stop, step):
-            if height[i] > tallest:
-                tallest = height[i]
-            res[i] = tallest
-        return res
-            
-    prefixMax = getIncreasing(0, len(height), 1)
-    postfixMax = getIncreasing(len(height) - 1, -1, -1)
+def trap(self, height):
+    left = 0
+    right = len(height) - 1
+    leftMax = height[left] 
+    rightMax = height[right]
     res = 0
-
-    for i in range(len(height)):
-        trapped = min(prefixMax[i], postfixMax[i]) - height[i]
+    while left < right:
+        trapped = 0
+        # Keep finding the biggest 
+        if leftMax <= rightMax:
+            left += 1
+            leftMax = max(height[left], leftMax)
+            trapped = leftMax - height[left] # We already have the min of the 2 maxes, 
+        else:
+            right -= 1
+            rightMax = max(height[right], rightMax)
+            trapped = rightMax - height[right]
         if trapped > 0:
-            res += trapped 
+            res += trapped
     return res
