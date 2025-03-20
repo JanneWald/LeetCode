@@ -1,0 +1,13 @@
+def lengthOfLongestSubstring(self, s: str) -> int:
+    longest = 0
+    left = 0
+    window = set()
+    for right in range(0, len(s)):
+        rightChar = s[right]
+        while rightChar in window:
+            leftChar = s[left]
+            window.discard(leftChar)
+            left += 1
+        window.add(rightChar)
+        longest = max(longest, len(window))
+    return longest
