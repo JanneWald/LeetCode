@@ -1,33 +1,22 @@
-import heapq
-def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-    if k > len(nums):
-        return []
-    if k == len(nums):
-        return [max(nums)]
-    if k == 1:
-        return nums
-    l = 0
-    r = k - 1
+def maxSlidingWindow(self, nums, k):
     res = []
-    popNums = defaultdict(int)
-    maxHeap = []
-    for i in range(0, k):
-        maxHeap.append(-nums[i])
-    heapq.heapify(maxHeap) # Heapify a max heap
+    q = collections.deque()
+    l = r = 0
 
-    while(r < len(nums)):
-        res.append(-maxHeap[0]) # Get max
-        # Remove left
-        popNums[nums[l]] += 1
-        while (popNums[-maxHeap[0]] > 0):
-            popNums[-maxHeap[0]] -= 1
-            heapq.heappop(maxHeap)
-            
-        l += 1
-        # Add right 
+    while r < len(nums):
+        # Remove everything less than right val
+        while len(q) > 0 and nums[q[-1]] < nums[r]:
+            q.pop()
+        # Add right val
+        q.append(r)
+
+        # Remove left if outside window
+        if l > q[0]:
+            q.popleft()
+        
+        # Only move left or add max if we have a k sized window
+        if (r - l + 1) == k:
+            res.append(nums[q[0]])
+            l += 1
         r += 1
-        if r >= len(nums):
-            break
-        heapq.heappush(maxHeap, -nums[r])
-    
     return res
